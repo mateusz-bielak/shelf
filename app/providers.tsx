@@ -1,5 +1,6 @@
 "use client";
 
+// eslint-disable-next-line no-restricted-imports
 import { NextUIProvider } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 

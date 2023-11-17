@@ -1,3 +1,16 @@
 {
-  "extends": ["next/core-web-vitals", "prettier"]
+  "extends": [
+    "next/core-web-vitals",
+    "prettier",
+    "plugin:tailwindcss/recommended"
+  ],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "name": "@nextui-org/react",
+        "message": "Please import from specific packages instead. Example: import { Button } from '@nextui-org/button'."
+      }
+    ]
+  }
 }
