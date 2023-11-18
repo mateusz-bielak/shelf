@@ -1,3 +1,5 @@
+import { Button } from "@nextui-org/button";
+import { Link } from "@nextui-org/link";
 import {
   Navbar,
   NavbarBrand,
@@ -5,8 +7,6 @@ import {
   NavbarItem,
   NavbarMenuToggle,
 } from "@nextui-org/navbar";
-import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
 
 export function NavigationBar() {
   return (
