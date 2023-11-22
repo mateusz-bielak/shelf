@@ -7,6 +7,7 @@ export type Item = {
   name: string;
   serialNumber?: string;
   status: "ASSIGNED" | "UNASSIGNED";
+  type: string;
   userId?: string;
 };
 
