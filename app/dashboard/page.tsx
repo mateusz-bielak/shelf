@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { ITEMS_MOCK } from "../lib/mocks";
+import { Suspense } from "react";
 import { NavigationBar } from "../ui/NavigationBar";
 import { Shelf } from "../ui/Shelf";
 
@@ -11,7 +11,9 @@ export default function DashboardPage() {
   return (
     <>
       <NavigationBar />
-      <Shelf rows={ITEMS_MOCK} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Shelf />
+      </Suspense>
     </>
   );
 }
