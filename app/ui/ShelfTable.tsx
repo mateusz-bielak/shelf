@@ -10,7 +10,6 @@ import {
   getKeyValue,
 } from "@nextui-org/table";
 import React from "react";
-import { fetchItems } from "../lib/data";
 import { Item } from "../lib/types";
 
 type Props = {

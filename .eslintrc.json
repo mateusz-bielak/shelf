@@ -1,5 +1,5 @@
 {
-  "plugins": ["perfectionist"],
+  "plugins": ["perfectionist", "unused-imports"],
   "extends": [
     "next/core-web-vitals",
     "plugin:perfectionist/recommended-natural",
@@ -7,8 +7,20 @@
     "prettier"
   ],
   "rules": {
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "warn",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+
     "perfectionist/sort-imports": [
-      "error",
+      "warn",
       {
         "groups": [
           "type",
@@ -25,6 +37,7 @@
         "newlines-between": "never"
       }
     ],
+
     "no-restricted-imports": [
       "error",
       {

@@ -1,7 +1,6 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
 
 const UserSchema = z.object({

@@ -1,11 +1,9 @@
-import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
+import { UserButton } from "@clerk/nextjs";
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
 } from "@nextui-org/navbar";
 
 export function NavigationBar() {
@@ -14,19 +12,9 @@ export function NavigationBar() {
       <NavbarBrand>
         <p className="font-bold uppercase">Shelf 200</p>
       </NavbarBrand>
-      <NavbarContent className="sm:hidden" justify="end">
-        <NavbarMenuToggle />
-      </NavbarContent>
-      <NavbarContent className="hidden sm:flex" justify="end">
+      <NavbarContent justify="end">
         <NavbarItem>
-          <Link className="text-default-50" href="#">
-            Login
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#">
-            Sign Up
-          </Button>
+          <UserButton afterSignOutUrl="/" />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

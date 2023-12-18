@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { fetchItems } from "../lib/data";
 import { ShelfTable } from "./ShelfTable";
 
