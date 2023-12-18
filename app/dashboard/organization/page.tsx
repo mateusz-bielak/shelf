@@ -2,7 +2,7 @@ import { OrganizationProfile } from "@clerk/nextjs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "Organization",
 };
 
 export default function Page() {

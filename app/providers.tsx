@@ -1,7 +1,6 @@
 "use client";
 
 import { ClerkProvider } from "@clerk/nextjs";
-// eslint-disable-next-line no-restricted-imports
 import { NextUIProvider } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 

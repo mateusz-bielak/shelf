@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-// eslint-disable-next-line no-restricted-imports
 import { nextui } from "@nextui-org/react";
 
 const config: Config = {

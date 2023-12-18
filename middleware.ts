@@ -17,8 +17,14 @@ export default authMiddleware({
     }
 
     // Redirect logged in users to dashboard
+    const dashboardUrl = new URL("/dashboard", req.url);
     if (auth.userId && req.nextUrl.pathname === "/") {
-      const dashboardUrl = new URL("/dashboard", req.url);
+      return NextResponse.redirect(dashboardUrl);
+    }
+    if (
+      auth.orgId &&
+      req.nextUrl.pathname === "/dashboard/create/organization"
+    ) {
       return NextResponse.redirect(dashboardUrl);
     }
 
