@@ -9,34 +9,22 @@ import {
 } from "@nextui-org/navbar";
 import { Link } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
+import { ReactNode } from "react";
 
 export function NavigationBar() {
-  const pathname = usePathname();
-
   return (
     <Navbar className="bg-primary-900 text-default-50">
       <NavbarBrand>
         <p className="font-bold uppercase">Shelf 200</p>
       </NavbarBrand>
       <NavbarContent className="flex" justify="center">
-        <NavbarItem
-          className="data-[active=true]:text-primary"
-          isActive={pathname === "/dashboard"}
-        >
-          <Link className="text-inherit" href="/dashboard">
-            Dashboard
-          </Link>
-        </NavbarItem>
-        <NavbarItem
-          className="data-[active=true]:text-primary"
-          isActive={pathname === "/dashboard/organization"}
-        >
-          <Link className="text-inherit" href="/dashboard/organization">
-            Organization
-          </Link>
-        </NavbarItem>
+        <NavbarLinkItem href="/dashboard">Dashboard</NavbarLinkItem>
+        <NavbarLinkItem href="/dashboard/organization">
+          Organization
+        </NavbarLinkItem>
       </NavbarContent>
       <NavbarContent justify="end">
+        <NavbarLinkItem href="/dashboard/create/item">Add Item</NavbarLinkItem>
         <NavbarItem>
           <UserButton afterSignOutUrl="/" />
         </NavbarItem>
@@ -44,3 +32,18 @@ export function NavigationBar() {
     </Navbar>
   );
 }
+
+type NavbarLinkItemProps = { children: ReactNode; href: string };
+
+const NavbarLinkItem = ({ children, href }: NavbarLinkItemProps) => {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
+  return (
+    <NavbarItem className="data-[active=true]:text-primary" isActive={isActive}>
+      <Link className="text-inherit" href={href}>
+        {children}
+      </Link>
+    </NavbarItem>
+  );
+};

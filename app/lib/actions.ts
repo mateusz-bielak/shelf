@@ -1,71 +1,88 @@
 "use server";
 
+import { auth } from "@clerk/nextjs";
 import { sql } from "@vercel/postgres";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 
-const UserSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
+const ItemLogSchema = z.object({
+  editorId: z.string(),
   id: z.string(),
-  name: z.string(),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long" })
-    .regex(/\d+/g, { message: "Password must contain at least one number" })
-    .regex(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/, {
-      message: "Password must contain at least one symbol",
-    })
-    .regex(/[A-Z]+/g, {
-      message: "Password must contain at least one uppercase letter",
-    })
-    .regex(/[a-z]+/g, {
-      message: "Password must contain at least one lowercase letter",
-    }),
-  role: z.enum(["ADMIN", "USER"], {
-    invalid_type_error: "Please select a role.",
-  }),
+  status: z.enum(["ASSIGNED", "UNASSIGNED"]),
+  timestamp: z.string(),
+  userId: z.string(),
 });
 
-const CreateUser = UserSchema.omit({ id: true, role: true });
+const ItemSchema = z.object({
+  archived: z.boolean(),
+  description: z.string().optional(),
+  files: z.array(z.string()).optional(),
+  id: z.string(),
+  logs: z.array(ItemLogSchema),
+  name: z.string().trim().min(1, "Please, provide an item name."),
+  serialNumber: z.string().optional(),
+  status: z.enum(["ASSIGNED", "UNASSIGNED"]),
+  type: z.enum(["book", "laptop", "misc"], {
+    errorMap: () => ({ message: "Please, select an item type." }),
+  }),
+  userId: z.string().optional(),
+});
 
-export type CreateUserState = {
+const CreateItem = ItemSchema.omit({
+  archived: true,
+  description: true,
+  files: true,
+  id: true,
+  logs: true,
+  status: true,
+  userId: true,
+});
+
+type CreateItemState = {
   errors?: {
-    email?: string[];
     name?: string[];
-    password?: string[];
+    serialNumber?: string[];
+    type?: string[];
   };
   message?: null | string;
 };
 
-export async function createUser(
-  prevState: CreateUserState,
+export async function createItem(
+  prevState: CreateItemState,
   formData: FormData,
-): Promise<CreateUserState> {
-  const validatedFields = CreateUser.safeParse({
-    email: formData.get("email"),
+): Promise<CreateItemState> {
+  console.log("run");
+  const { orgId } = auth();
+
+  const validatedFields = CreateItem.safeParse({
     name: formData.get("name"),
-    password: formData.get("password"),
+    serialNumber: formData.get("serialNumber"),
+    type: formData.get("type"),
   });
 
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create User.",
+      message: "Missing Fields. Failed to Create Item.",
     };
   }
 
-  const { email, name, password } = validatedFields.data;
+  const { name, serialNumber, type } = validatedFields.data;
 
   try {
     await sql`
-        INSERT INTO users (email, name, password)
-        VALUES (${email}, ${name}, ${password})
+        INSERT INTO items (archived, name, organization_id, serial_number, status, type)
+        VALUES (false, ${name}, ${orgId}, ${serialNumber}, 'UNASSIGNED', ${type})
       `;
   } catch (error) {
     console.log(error);
     return {
-      message: "Database Error: Failed to Create Invoice.",
+      message: "Database Error: Failed to Create Item.",
     };
   }
 
-  return {};
+  console.log("success");
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }
