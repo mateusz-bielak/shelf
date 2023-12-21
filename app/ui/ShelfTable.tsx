@@ -9,6 +9,7 @@ import {
   TableRow,
   getKeyValue,
 } from "@nextui-org/table";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { Item } from "../lib/types";
 
@@ -24,6 +25,8 @@ const columns = [
 ];
 
 export function ShelfTable({ rows }: Props) {
+  const router = useRouter();
+
   return (
     <Table
       aria-label="List of all company items."
@@ -31,7 +34,10 @@ export function ShelfTable({ rows }: Props) {
         th: "bg-primary-200 first:rounded-none last:rounded-none text-black",
         tr: "cursor-pointer hover:bg-primary-50",
       }}
-      onRowAction={key => alert(`Opening item ${key}...`)}
+      onRowAction={key => {
+        console.log(`/dashboard/edit/item/${key}`);
+        router.push(`/dashboard/edit/item/${key}`);
+      }}
       removeWrapper
     >
       <TableHeader columns={columns}>

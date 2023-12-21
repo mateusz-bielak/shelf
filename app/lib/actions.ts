@@ -52,7 +52,6 @@ export async function createItem(
   prevState: CreateItemState,
   formData: FormData,
 ): Promise<CreateItemState> {
-  console.log("run");
   const { orgId } = auth();
 
   const validatedFields = CreateItem.safeParse({
@@ -82,7 +81,47 @@ export async function createItem(
     };
   }
 
-  console.log("success");
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
+}
+
+const EditItem = CreateItem;
+
+type EditItemState = CreateItemState;
+
+export async function editItem(
+  id: string,
+  prevState: EditItemState,
+  formData: FormData,
+): Promise<EditItemState> {
+  const validatedFields = EditItem.safeParse({
+    name: formData.get("name"),
+    serialNumber: formData.get("serialNumber"),
+    type: formData.get("type"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Edit Item.",
+    };
+  }
+
+  const { name, serialNumber, type } = validatedFields.data;
+
+  try {
+    await sql`
+      UPDATE items
+      SET name = ${name}, serial_number = ${serialNumber}, type = ${type}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Database Error: Failed to Edit Item.",
+    };
+  }
+
   revalidatePath("/dashboard");
   redirect("/dashboard");
 }

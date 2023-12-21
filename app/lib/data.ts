@@ -17,3 +17,14 @@ export async function fetchItems() {
     throw new Error("Failed to fetch items data.");
   }
 }
+
+export async function fetchItemById(id: string) {
+  noStore();
+  try {
+    const data = await sql<Item>`SELECT * FROM items WHERE id = ${id}`;
+
+    return data.rows[0];
+  } catch (error) {
+    console.error("Database Error:", error);
+  }
+}
